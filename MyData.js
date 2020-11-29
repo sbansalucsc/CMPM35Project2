@@ -1,7 +1,6 @@
 d3.select('body')
-  // .append('svg').attr('width', 400).attr('height', 400).attr('id', 'chart')
-let zoom = d3.zoom().on("zoom", zoomed); 
-let svg = d3.select('#chart').append('g').attr('transform', 'translate(50, 30)').call(zoom).on("dblclick.zoom", null);
+
+let svg = d3.select('#chart').append('g').attr('transform', 'translate(50, 30)')
 let yScale = d3.scaleLinear()
     .domain([0, 50])
     .range([100, 0])
@@ -35,10 +34,23 @@ d3.csv("./MyData.csv").then( (mydata) => {
           .attr('y', d => yScale(d.PhoneChecked)) // 100 - d[1]
           .attr('width', 15)
           .attr('height', d => 2*d.PhoneChecked)
-          .style('fill', d => { return legend[d.Week] })
-          .call(zoom)
-          .on("dblclick.zoom", null);
-
+          .on('mouseover', function(d, i) {
+            console.log("mouseover on", this);
+     
+              d3.select(this)
+                .transition()
+                .attr('width', 20)
+                .attr('fill','#ff0000');
+    })
+          .on('mouseout', function(d, i) {
+            console.log("mouseout", this);
+      
+              d3.select(this)
+                .transition()
+                .duration(100)
+                .attr('width', 15)
+                .attr('fill', '#000000');
+    })    
 
     let xLabels = svg.append('g')
        .selectAll('text')
@@ -64,15 +76,3 @@ svg.append('text')
    .attr('transform', 'translate(-30, 50) rotate(270)')
       .text('Phone checked')
       .style("text-anchor", "middle")
-
-function zoomed() {
-    g.attr("transform", d3.event.transform);
-}
-
-
-
-
-
-
-  // <text x="10" y="10">hello world</text>
-
